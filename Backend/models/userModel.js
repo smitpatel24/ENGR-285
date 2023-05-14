@@ -13,6 +13,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
+    name: {
+      type: String,
+      required: true,
+    },
+
+    phoneNo: {
+      type: String,
+      required: false,
+    },
+
+    email: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );

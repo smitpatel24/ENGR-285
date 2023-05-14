@@ -1,4 +1,5 @@
-const userRoutes = require("./routes/userRoutes.js");
+const userRoutes = require("./routes/userRoutes");
+const postRoutes = require("./routes/postRoutes");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -15,5 +16,6 @@ db.once("open", () => console.log("Connected to Database"));
 
 app.use(express.json());
 app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
 
 app.listen(3000, () => console.log("Server Started"));
