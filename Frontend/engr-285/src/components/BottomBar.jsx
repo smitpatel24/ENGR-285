@@ -2,9 +2,10 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import RestoreIcon from "@mui/icons-material/Restore";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
+import HomeIcon from "@mui/icons-material/Home";
+import PersonIcon from "@mui/icons-material/Person";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 
 export default function BottomBar() {
@@ -21,20 +22,21 @@ export default function BottomBar() {
         }}
       >
         <BottomNavigationAction
-          label="Recents"
-          icon={<RestoreIcon />}
-          onClick={() => navigate("/home")}
-        />
-        <BottomNavigationAction
-          label="Favorites"
-          icon={<FavoriteIcon />}
+          label="Profile"
+          icon={<PersonIcon />}
           onClick={() => navigate("/profile")}
         />
         <BottomNavigationAction
-          label="Nearby"
-          icon={<LocationOnIcon />}
+          label="Home"
+          icon={<HomeIcon />}
+          onClick={() => navigate("/home")}
+        />
+        <BottomNavigationAction
+          label="Your Posts"
+          icon={<ListAltIcon />}
           onClick={() => navigate("/yourPosts")}
         />
+        <BottomNavigationAction label="Logout" icon={<LogoutIcon />} />
       </BottomNavigation>
     </Box>
   );

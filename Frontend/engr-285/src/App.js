@@ -1,17 +1,28 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import BottomBar from "./components/BottomBar";
 import Home from "./components/Home";
+import LoginPage from "./components/LoginPage";
 import Profile from "./components/Profile";
+import SignupPage from "./components/SignupPage";
 import YourPosts from "./components/YourPosts";
 
 function App() {
+  const location = useLocation();
+
+  const showBottomBar = /^(\/home|\/profile|\/yourPosts(\/|$))$/.test(
+    location.pathname
+  );
+
   return (
     <>
-      <BottomBar></BottomBar>
+      {showBottomBar && <BottomBar />}
       <Routes>
-        <Route path="/home" element={<Home></Home>}></Route>
-        <Route path="/profile" element={<Profile></Profile>}></Route>
-        <Route path="/yourPosts" element={<YourPosts></YourPosts>}></Route>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/yourPosts/*" element={<YourPosts />} />
+        <Route path="/*" element={<Navigate to="/login" />} />
       </Routes>
     </>
   );
