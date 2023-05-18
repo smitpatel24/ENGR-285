@@ -8,12 +8,11 @@ const login = asyncHandler(async (req, res) => {
   const JWT_SECRET = "THESECRETISINPLAINSIGHT";
 
   if (user && (await user.matchPassword(password))) {
-    // Generate JWT token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       JWT_SECRET,
       {
-        expiresIn: "1d", // Set the expiration time for the token
+        expiresIn: "2M",
       }
     );
 
@@ -27,6 +26,23 @@ const login = asyncHandler(async (req, res) => {
     throw new Error("Invalid Email or Password");
   }
 });
+
+const jwtAuth = function (req, res, next) {
+  if (req.user) {
+    next();
+  } else {
+    return res.status(401).json({ message: "Unauthorized user!!" });
+  }
+};
+
+const profile = function (req, res, next) {
+  if (req.user) {
+    res.send(req.user);
+    next();
+  } else {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
 
 const register = asyncHandler(async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
@@ -92,4 +108,12 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { login, register, getUsers, getOneUser, updateUserProfile };
+module.exports = {
+  login,
+  register,
+  getUsers,
+  getOneUser,
+  updateUserProfile,
+  jwtAuth,
+  profile,
+};
