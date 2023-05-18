@@ -17,7 +17,7 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const register = asyncHandler(async (req, res) => {
-  const { username, password, name } = req.body;
+  const { email, password, firstName, lastName } = req.body;
   const userExist = await User.findOne({ username });
 
   if (userExist) {
@@ -25,13 +25,14 @@ const register = asyncHandler(async (req, res) => {
     throw new Error("User already Exist");
   }
 
-  const user = await User.create({ username, password, name });
+  const user = await User.create({ email, password, firstName, lastName });
 
   if (user) {
     res.status(201).json({
       _id: user._id,
-      username: user.username,
-      name: user.name,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
     });
   } else {
     res.status(400);
