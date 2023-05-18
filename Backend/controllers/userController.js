@@ -1,24 +1,36 @@
 const User = require("../models/userModel.js");
+const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 
 const login = asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  const JWT_SECRET = "THESECRETISINPLAINSIGHT";
 
   if (user && (await user.matchPassword(password))) {
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      JWT_SECRET,
+      {
+        expiresIn: "1d", // Set the expiration time for the token
+      }
+    );
+
     return res.json({
       _id: user._id,
-      username: user.username,
+      email: user.email,
+      token, // Add the token to the response
     });
   } else {
     res.status(401);
-    throw new Error("Invalid Username or Password");
+    throw new Error("Invalid Email or Password");
   }
 });
 
 const register = asyncHandler(async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
-  const userExist = await User.findOne({ username });
+  const userExist = await User.findOne({ email });
 
   if (userExist) {
     res.status(400);
