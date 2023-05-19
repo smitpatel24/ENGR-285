@@ -11,7 +11,7 @@ const YourPosts = () => {
       console.log("On your posts page");
       // Do something here
     }
-  }, []);
+  }, [navigate]);
   return <div>YourPosts</div>;
 };
 

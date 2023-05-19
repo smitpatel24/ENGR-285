@@ -39,12 +39,26 @@ export default function BottomBar() {
   };
 
   return (
-    <Box sx={{ width: "100%", position: "absolute", bottom: 0 }}>
+    <Box
+      sx={{
+        width: "100%",
+        position: "fixed",
+        bottom: 0,
+        zIndex: 1000, // Set a higher z-index value if necessary
+      }}
+    >
       <BottomNavigation
         showLabels
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);
+        }}
+        sx={{
+          overflowX: "hidden",
+          overflowY: "hidden",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
         <BottomNavigationAction

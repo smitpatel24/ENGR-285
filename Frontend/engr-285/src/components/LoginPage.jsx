@@ -12,11 +12,22 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const defaultTheme = createTheme();
 
 export default function LoginPage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let authorization = localStorage.getItem("token");
+    if (!authorization) {
+      // navigate("/login");
+    } else {
+      navigate("/home");
+    }
+  }, [navigate]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -29,7 +40,7 @@ export default function LoginPage() {
         { email, password }
       );
       const token = "JWT " + response.data.token;
-
+      console.log(token);
       // Store the JWT token securely (e.g., in local storage)
       localStorage.setItem("token", token);
       console.log("Success");

@@ -11,7 +11,7 @@ const Profile = () => {
       console.log("On profile page");
       // Do something here
     }
-  }, []);
+  }, [navigate]);
   return <div>Profile</div>;
 };
 
