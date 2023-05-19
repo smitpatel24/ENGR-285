@@ -4,6 +4,8 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 jsonwebtoken = require("jsonwebtoken");
+const cors = require("cors");
+
 // smitmongodb24;
 // mongodb24;
 
@@ -15,6 +17,7 @@ const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
 db.once("open", () => console.log("Connected to Database"));
 
+app.use(cors());
 app.use(function (req, res, next) {
   if (
     req.headers &&

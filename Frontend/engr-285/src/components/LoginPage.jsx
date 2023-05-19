@@ -10,17 +10,36 @@ import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 export default function LoginPage() {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/users/login",
+        { email, password }
+      );
+      const token = "JWT " + response.data.token;
+
+      // Store the JWT token securely (e.g., in local storage)
+      localStorage.setItem("token", token);
+      console.log("Success");
+      navigate("/home");
+
+      // Redirect or perform other actions as needed after successful login
+    } catch (error) {
+      console.error("Login failed:", error);
+      // Handle login error
+    }
   };
 
   return (
@@ -39,7 +58,7 @@ export default function LoginPage() {
             <MapsHomeWorkIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Roomates Finder
+            Roommates Finder
           </Typography>
           <Box
             component="form"

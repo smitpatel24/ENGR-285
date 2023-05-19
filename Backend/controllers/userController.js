@@ -8,13 +8,7 @@ const login = asyncHandler(async (req, res) => {
   const JWT_SECRET = "THESECRETISINPLAINSIGHT";
 
   if (user && (await user.matchPassword(password))) {
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      JWT_SECRET,
-      {
-        expiresIn: "2M",
-      }
-    );
+    const token = jwt.sign({ userId: user._id, email: user.email }, JWT_SECRET);
 
     return res.json({
       _id: user._id,
@@ -69,42 +63,59 @@ const register = asyncHandler(async (req, res) => {
 });
 
 const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({});
-  res.json(users);
+  if (req.user) {
+    const users = await User.find({});
+    res.json(users);
+  } else {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized user!!", status: "error" });
+  }
 });
 
 const getOneUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.body._id);
-
-  if (user) {
-    return res.json(user);
+  if (req.user) {
+    const user = await User.findById(req.body._id);
+    if (user) {
+      return res.json(user);
+    } else {
+      res.status(404);
+      throw new Error("User not Found");
+    }
   } else {
-    res.status(404);
-    throw new Error("User not Found");
+    return res
+      .status(401)
+      .json({ message: "Unauthorized user!!", status: "error" });
   }
 });
 
 const updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.body._id);
+  if (req.user) {
+    const user = await User.findById(req.body._id);
+    if (user) {
+      user.firstName = req.body.firstName || user.firstName;
+      user.lastName = req.body.lastName || user.lastName;
+      user.phoneNo = req.body.phoneNo || user.phoneNo;
+      if (req.body.password) {
+        user.password = req.body.password;
+      }
 
-  if (user) {
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-    user.phoneNo = req.body.phoneNo || user.phoneNo;
-    if (req.body.password) {
-      user.password = req.body.password;
+      const updatedUser = await user.save();
+      return res.json({
+        _id: updatedUser._id,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        email: updatedUser.email,
+        phoneNo: updatedUser.phoneNo,
+      });
+    } else {
+      res.status(404);
+      throw new Error("User not Found");
     }
-
-    const updatedUser = await user.save();
-    return res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      phoneNo: updatedUser.phoneNo,
-    });
   } else {
-    res.status(404);
-    throw new Error("User not Found");
+    return res
+      .status(401)
+      .json({ message: "Unauthorized user!!", status: "error" });
   }
 });
 
