@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Grid } from "@mui/material";
 import axios from "axios";
 
 const Profile = () => {
@@ -23,7 +23,6 @@ const Profile = () => {
         })
         .then((response) => {
           setUserData(response.data);
-          console.log(response.data.userId);
           axios
             .get("http://localhost:3000/api/users/getOneUser", {
               headers: {
@@ -53,7 +52,7 @@ const Profile = () => {
     } else {
       axios
         .put(
-          "http://localhost:3000/api/users/updateUser",
+          "http://localhost:3000/api/users/updateUserProfile",
           {
             _id: userData.userId,
             firstName: firstName,
@@ -77,26 +76,40 @@ const Profile = () => {
   };
 
   return (
-    <div>
-      <TextField
-        label="First Name"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-      />
-      <TextField
-        label="Last Name"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-      />
-      <TextField
-        label="Phone No"
-        value={phoneNo}
-        onChange={(e) => setPhoneNo(e.target.value)}
-      />
-      <Button variant="contained" onClick={handleUpdate}>
-        Update
-      </Button>
-    </div>
+    <Grid container spacing={2}>
+      <Grid item xs={12} textAlign="center">
+        <h2>Profile</h2>
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          fullWidth
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          fullWidth
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Phone No"
+          value={phoneNo}
+          onChange={(e) => setPhoneNo(e.target.value)}
+          fullWidth
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Button variant="contained" onClick={handleUpdate} fullWidth>
+          Update
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 
