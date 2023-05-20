@@ -75,7 +75,7 @@ const getUsers = asyncHandler(async (req, res) => {
 
 const getOneUser = asyncHandler(async (req, res) => {
   if (req.user) {
-    const user = await User.findById(req.body._id);
+    const user = await User.findById(req.user.userId);
     if (user) {
       return res.json(user);
     } else {

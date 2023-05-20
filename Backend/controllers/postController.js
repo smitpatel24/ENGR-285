@@ -3,7 +3,7 @@ const Post = require("../models/postModel.js");
 
 const getAllPosts = asyncHandler(async (req, res) => {
   if (req.user) {
-    const list = await Post.find({});
+    const list = await Post.find({}).sort({ updatedAt: -1 });
     res.json(list);
   } else {
     return res
