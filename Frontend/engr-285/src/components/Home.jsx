@@ -123,7 +123,6 @@ const Home = () => {
           comments: "",
         });
         setOpenDialog(false);
-
         // Refresh the page
         window.location.reload();
       })
@@ -153,7 +152,7 @@ const Home = () => {
         <Card key={post._id} variant="outlined" sx={{ marginBottom: "16px" }}>
           <CardContent>
             <Typography variant="h6" component="div">
-              Address: {post.address}
+              {post.address}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Move In: {post.moveIn}

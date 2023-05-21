@@ -10,19 +10,43 @@ import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 export default function SignupPage() {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+
+    const formData = {
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
       email: data.get("email"),
       password: data.get("password"),
-    });
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/api/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        // Registration successful
+        console.log("User registered successfully!");
+        navigate("/login");
+      } else {
+        // Registration failed
+        console.error("User registration failed.");
+      }
+    } catch (error) {
+      console.error("An error occurred during registration:", error);
+    }
   };
 
   return (

@@ -40,10 +40,8 @@ export default function LoginPage() {
         { email, password }
       );
       const token = "JWT " + response.data.token;
-      console.log(token);
       // Store the JWT token securely (e.g., in local storage)
       localStorage.setItem("token", token);
-      console.log("Success");
       navigate("/home");
 
       // Redirect or perform other actions as needed after successful login

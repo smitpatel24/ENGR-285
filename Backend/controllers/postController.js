@@ -15,7 +15,7 @@ const getAllPosts = asyncHandler(async (req, res) => {
 const getPostByUserId = asyncHandler(async (req, res) => {
   if (req.user) {
     const list = await Post.find({
-      userId: req.body.userId,
+      userId: req.user.userId,
     });
     res.json(list);
   } else {
