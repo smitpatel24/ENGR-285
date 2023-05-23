@@ -3,19 +3,40 @@ const postRoutes = require("./routes/postRoutes");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-jsonwebtoken = require("jsonwebtoken");
+const jsonwebtoken = require("jsonwebtoken");
 const cors = require("cors");
+const winston = require("winston");
+const winstonmongodb = require("winston-mongodb");
+const uri =
+  "mongodb+srv://smitmongodb24:mongodb24@cluster-engr-285.a6ygl9n.mongodb.net/?retryWrites=true&w=majority";
 
 // smitmongodb24;
 // mongodb24;
 
-const uri =
-  "mongodb+srv://smitmongodb24:mongodb24@cluster-engr-285.a6ygl9n.mongodb.net/?retryWrites=true&w=majority";
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(), // Add timestamp to each log entry
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "systemlog.log" }),
+    new winstonmongodb.MongoDB({
+      level: "info", // Log level for the transport
+      db: uri, // MongoDB connection URI
+      collection: "logs", // Collection name to store logs
+      options: { useUnifiedTopology: true }, // MongoDB connection options
+    }),
+  ],
+});
 
 mongoose.connect(uri, { useNewUrlParser: true });
 const db = mongoose.connection;
-db.on("error", (error) => console.error(error));
-db.once("open", () => console.log("Connected to Database"));
+db.on("error", (error) => logger.error(error));
+db.once("open", () => {
+  logger.info("Connected to Database");
+});
 
 app.use(cors());
 app.use(function (req, res, next) {
@@ -43,4 +64,6 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 
-app.listen(3000, () => console.log("Server Started"));
+app.listen(3000, () => {
+  logger.info("Server Started");
+});
