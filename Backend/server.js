@@ -67,3 +67,5 @@ app.use("/api/posts", postRoutes);
 app.listen(3000, () => {
   logger.info("Server Started");
 });
+
+module.exports = app;
