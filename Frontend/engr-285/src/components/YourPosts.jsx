@@ -161,7 +161,7 @@ const YourPosts = () => {
                   User Email: {post.userEmail}
                 </Typography>
                 <Typography color="textSecondary" gutterBottom>
-                  Rett: {post.rent}
+                  Rent: {post.rent}
                 </Typography>
                 <Typography variant="body2" component="p">
                   Comments: {post.comments}

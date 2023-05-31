@@ -18,6 +18,7 @@ import AddIcon from "@mui/icons-material/Add";
 const Home = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [newPost, setNewPost] = useState({
     address: "",
@@ -29,6 +30,7 @@ const Home = () => {
     comments: "",
     userId: "",
   });
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     let authorization = localStorage.getItem("token");
@@ -73,6 +75,7 @@ const Home = () => {
             })
             .then((data) => {
               setPosts(data);
+              setFilteredPosts(data);
             })
             .catch((error) => {
               console.error("Error retrieving posts:", error);
@@ -138,8 +141,34 @@ const Home = () => {
     Object.values(newPost).some((value) => value === "") ||
     Object.values(newPost).length !== 8;
 
+  const handleSearch = () => {
+    const filtered = posts.filter(
+      (post) =>
+        post.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.moveIn.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.moveOut.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.userPhone.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.userEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.comments.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.rent.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredPosts(filtered);
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchQuery]);
+
   return (
     <div>
+      <TextField
+        label="Search"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+
       <Fab
         color="primary"
         onClick={handleOpenDialog}
@@ -148,7 +177,7 @@ const Home = () => {
         <AddIcon />
       </Fab>
 
-      {posts.map((post) => (
+      {filteredPosts.map((post) => (
         <Card key={post._id} variant="outlined" sx={{ marginBottom: "16px" }}>
           <CardContent>
             <Typography variant="h6" component="div">
